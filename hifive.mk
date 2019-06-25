@@ -2,8 +2,8 @@
 # a toolchain install tree that was built via other means.
 RISCV ?= $(CURDIR)/riscv
 PATH := $(RISCV)/bin:$(PATH)
-ISA ?= rv64imafdc
-ABI ?= lp64d
+ISA ?= rv32imafdc
+ABI ?= ilp32d
 
 srcdir := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 srcdir := $(srcdir:/=)
@@ -49,11 +49,11 @@ spike := $(spike_wrkdir)/prefix/bin/spike
 
 qemu_srcdir := $(srcdir)/riscv-qemu
 qemu_wrkdir := $(wrkdir)/riscv-qemu
-qemu := $(qemu_wrkdir)/prefix/bin/qemu-system-riscv64
+qemu := $(qemu_wrkdir)/prefix/bin/qemu-system-riscv32
 
 rootfs := $(wrkdir)/rootfs.bin
 
-target := riscv64-unknown-linux-gnu
+target := riscv32-unknown-linux-gnu
 
 .PHONY: all
 all: $(hex) $(vmlinux) $(linux_module)
@@ -71,7 +71,7 @@ $(buildroot_initramfs_wrkdir)/.config: $(buildroot_srcdir) $(buildroot_rootfs_ov
 	rm -rf $(dir $@)
 	mkdir -p $(dir $@)
 	cp $(buildroot_initramfs_config) $@
-	$(MAKE) -s -C $< RISCV=$(RISCV) PATH=$(PATH) O=$(buildroot_initramfs_wrkdir) olddefconfig CROSS_COMPILE=riscv64-unknown-linux-gnu-
+	$(MAKE) -s -C $< RISCV=$(RISCV) PATH=$(PATH) O=$(buildroot_initramfs_wrkdir) olddefconfig CROSS_COMPILE=riscv32-unknown-linux-gnu-
 
 $(buildroot_initramfs_tar): $(buildroot_srcdir) $(buildroot_initramfs_wrkdir)/.config $(RISCV)/bin/$(target)-gcc $(buildroot_initramfs_config)
 	$(MAKE) -s -C $< RISCV=$(RISCV) PATH=$(PATH) O=$(buildroot_initramfs_wrkdir)
@@ -115,7 +115,7 @@ ifeq (,$(filter rv%c,$(ISA)))
 endif
 ifeq ($(ISA),$(filter rv32%,$(ISA)))
 	sed 's/^.*CONFIG_ARCH_RV32I.*$$/CONFIG_ARCH_RV32I=y/' -i $@
-	sed 's/^.*CONFIG_ARCH_RV64I.*$$/CONFIG_ARCH_RV64I=n/' -i $@
+	sed 's/^.*CONFIG_ARCH_RV32I.*$$/CONFIG_ARCH_RV32I=n/' -i $@
 	$(MAKE) -C $(linux_srcdir) O=$(linux_wrkdir) ARCH=riscv olddefconfig
 endif
 
@@ -124,7 +124,7 @@ $(vmlinux): $(linux_srcdir) $(linux_wrkdir)/.config $(buildroot_initramfs_sysroo
 		CONFIG_INITRAMFS_SOURCE="$(confdir)/initramfs.txt $(buildroot_initramfs_sysroot)" \
 		CONFIG_INITRAMFS_ROOT_UID=$(shell id -u) \
 		CONFIG_INITRAMFS_ROOT_GID=$(shell id -g) \
-		CROSS_COMPILE=riscv64-unknown-linux-gnu- \
+		CROSS_COMPILE=riscv32-unknown-linux-gnu- \
 		ARCH=riscv \
 		vmlinux
 
@@ -137,7 +137,7 @@ $(linux_module): $(vmlinux)
 	mkdir -p $(linux_module_wrkdir)
 	cp -r $(linux_module_srcdir)/* $(linux_module_wrkdir)
 	$(MAKE) -C $(linux_srcdir) O=$(linux_wrkdir)\
-		CROSS_COMPILE=riscv64-unknown-linux-gnu- \
+		CROSS_COMPILE=riscv32-unknown-linux-gnu- \
 		ARCH=riscv \
 		M=$(linux_module_wrkdir) \
 		modules
@@ -198,7 +198,7 @@ $(qemu): $(qemu_srcdir)
 	mkdir -p $(dir $@)
 	cd $(qemu_wrkdir) && $</configure \
 		--prefix=$(dir $(abspath $(dir $@))) \
-		--target-list=riscv64-softmmu
+		--target-list=riscv32-softmmu
 	$(MAKE) -C $(qemu_wrkdir)
 	$(MAKE) -C $(qemu_wrkdir) install
 	touch -c $@
