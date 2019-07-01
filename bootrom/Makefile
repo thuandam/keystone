@@ -1,7 +1,7 @@
-CC = riscv64-unknown-elf-gcc
-OBJCOPY= riscv64-unknown-elf-objcopy
+CC = riscv32-unknown-elf-gcc
+OBJCOPY= riscv32-unknown-elf-objcopy
 CFLAGS = \
-	-march=rv64imafdc -mcmodel=medany -mabi=lp64 \
+	-march=rv32imaf -mcmodel=medany -mabi=ilp32 \
 	-nostdlib -nostartfiles -fno-common -std=gnu11 \
 	-static \
 	-fPIC \
