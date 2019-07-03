@@ -1,0 +1,19 @@
+diff --git hw/riscv/virt.c hw/riscv/virt.c
+index 5a5fd108bb..3ff05994eb 100644
+--- hw/riscv/virt.c
++++ hw/riscv/virt.c
+@@ -49,7 +49,7 @@ static const struct MemmapEntry {
+     hwaddr size;
+ } virt_memmap[] = {
+     [VIRT_DEBUG] =    {        0x0,      0x100 },
+-    [VIRT_MROM] =     {     0x1000,    0x11000 },
++    [VIRT_MROM] =     {     0x1000,    0x20000 },
+     [VIRT_TEST] =     {   0x100000,     0x1000 },
+     [VIRT_CLINT] =    {  0x2000000,    0x10000 },
+     [VIRT_PLIC] =     {  0xc000000,  0x4000000 },
+diff --git roms/seabios roms/seabios
+--- roms/seabios
++++ roms/seabios
+@@ -1 +1 @@
+-Subproject commit a698c8995ffb2838296ec284fe3c4ad33dfca307
++Subproject commit a698c8995ffb2838296ec284fe3c4ad33dfca307-dirty

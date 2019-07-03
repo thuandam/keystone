@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 cd riscv-qemu
 patch --forward hw/riscv/boot.c < ../patches/qemu-kernel-reloc.patch || true
+patch --forward hw/riscv/virt.c < ../patches/qemu-rv32-romsize.patch || true
 cd ..
 
 # linux patch
