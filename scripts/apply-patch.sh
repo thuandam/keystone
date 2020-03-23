@@ -23,5 +23,11 @@ cd ..
 # sdk patch
 cd sdk
 patch -p1 --forward <  ../patches/linux-sdk-rv32.patch || true
+patch -p1 --forward <  ../patches/sdk-init-rv32.patch || true
+cd ..
+
+# riscv-pk patch
+cd riscv-pk
+patch -p1 --forward <  ../patches/riscv-pk-qemu-misa.patch || true
 cd ..
 

@@ -11,9 +11,3 @@ index 5a5fd108bb..3ff05994eb 100644
      [VIRT_TEST] =     {   0x100000,     0x1000 },
      [VIRT_CLINT] =    {  0x2000000,    0x10000 },
      [VIRT_PLIC] =     {  0xc000000,  0x4000000 },
-diff --git roms/seabios roms/seabios
---- roms/seabios
-+++ roms/seabios
-@@ -1 +1 @@
--Subproject commit a698c8995ffb2838296ec284fe3c4ad33dfca307
-+Subproject commit a698c8995ffb2838296ec284fe3c4ad33dfca307-dirty

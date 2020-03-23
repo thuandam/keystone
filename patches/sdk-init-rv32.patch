@@ -1,0 +1,13 @@
+diff --git a/scripts/init.sh b/scripts/init.sh
+index 9c434e5..b4d2292 100755
+--- a/scripts/init.sh
++++ b/scripts/init.sh
+@@ -18,7 +18,7 @@ init_runtime() {
+ 
+     case $1 in
+       eyrie)
+-        repo_url=https://github.com/keystone-enclave/keystone-runtime
++        repo_url="-b dev-rv32 https://github.com/keystone-enclave/keystone-runtime"
+         ;;
+       sel4)
+         repo_url=https://github.com/keystone-enclave/keystone-sel4
