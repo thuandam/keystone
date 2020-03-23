@@ -1,0 +1,13 @@
+diff --git a/machine/minit.c b/machine/minit.c
+index f0b1b50..58f8536 100644
+--- a/machine/minit.c
++++ b/machine/minit.c
+@@ -74,7 +74,7 @@ static void fp_init()
+ #else
+   uintptr_t fd_mask = (1 << ('F' - 'A')) | (1 << ('D' - 'A'));
+   clear_csr(misa, fd_mask);
+-  assert(!(read_csr(misa) & fd_mask));
++  //assert(!(read_csr(misa) & fd_mask));
+ #endif
+ }
+ 

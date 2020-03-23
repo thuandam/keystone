@@ -1,0 +1,101 @@
+diff --git a/keystone_user.h b/keystone_user.h
+index 7da2d90..827731d 100644
+--- a/keystone_user.h
++++ b/keystone_user.h
+@@ -38,45 +38,45 @@
+ 
+ 
+ struct runtime_params_t {
+-  __u64 runtime_entry;
+-  __u64 user_entry;
+-  __u64 untrusted_ptr;
+-  __u64 untrusted_size;
++  unsigned long runtime_entry;
++  unsigned long user_entry;
++  unsigned long untrusted_ptr;
++  unsigned long untrusted_size;
+ };
+ 
+ struct keystone_ioctl_create_enclave {
+-  __u64 eid;
++  unsigned long eid;
+ 
+   //Min pages required
+-  __u64 min_pages;
++  unsigned long min_pages;
+ 
+   // virtual addresses
+-  __u64 runtime_vaddr;
+-  __u64 user_vaddr;
++  unsigned long runtime_vaddr;
++  unsigned long user_vaddr;
+ 
+   // Runtime Parameters
+   struct runtime_params_t params;
+ };
+ 
+ struct keystone_ioctl_run_enclave {
+-  __u64 eid;
+-  __u64 entry;
+-  __u64 args_ptr;
+-  __u64 args_size;
+-  __u64 ret;
++  unsigned long eid;
++  unsigned long entry;
++  unsigned long args_ptr;
++  unsigned long args_size;
++  unsigned long ret;
+ };
+ 
+ struct addr_packed {
+-  __u64 va;
+-  __u64 copied;
+-  __u64 eid;
+-  __u64 mode;
++  unsigned long va;
++  unsigned long copied;
++  unsigned long eid;
++  unsigned long mode;
+ };
+ 
+ struct keystone_ioctl_alloc_vspace {
+-  __u64 eid;
+-  __u64 vaddr;
+-  __u64 size;
++  unsigned long eid;
++  unsigned long vaddr;
++  unsigned long size;
+ };
+ 
+ #endif
+diff --git a/riscv64.h b/riscv64.h
+index cbbdf42..df27481 100644
+--- a/riscv64.h
++++ b/riscv64.h
+@@ -42,16 +42,24 @@
+ 
+ #define PTE_TABLE(PTE) (((PTE) & (PTE_V | PTE_R | PTE_W | PTE_X)) == PTE_V)
+ 
++#if __riscv_xlen == 64
+ #define MSTATUS_SD MSTATUS64_SD
+ #define SSTATUS_SD SSTATUS64_SD
+ #define RISCV_PGLEVEL_BITS 9
++#define SATP_MODE_CHOICE INSERT_FIELD(0, SATP64_MODE, SATP_MODE_SV39)
++#define VA_BITS 39
++#else
++#define MSTATUS_SD MSTATUS32_SD
++#define SSTATUS_SD SSTATUS32_SD
++#define RISCV_PGLEVEL_BITS 10
++#define SATP_MODE_CHOICE INSERT_FIELD(0, SATP32_MODE, SATP_MODE_SV32)
++#define VA_BITS 32
++#endif
+ 
+ #define RISCV_PGSHIFT 12
+ #define RISCV_PGSIZE (1 << RISCV_PGSHIFT)
+ 
+ #define MEGAPAGE_SIZE ((uintptr_t)(RISCV_PGSIZE << RISCV_PGLEVEL_BITS))
+-#define SATP_MODE_CHOICE INSERT_FIELD(0, SATP64_MODE, SATP_MODE_SV39)
+-#define VA_BITS 39
+ #define GIGAPAGE_SIZE (MEGAPAGE_SIZE << RISCV_PGLEVEL_BITS)
+ 
+ //extern pte_t* root_page_table;

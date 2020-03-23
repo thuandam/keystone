@@ -1,0 +1,20 @@
+diff --git a/toolchain/helpers.mk b/toolchain/helpers.mk
+index 03355f56dd..a09d76a11b 100644
+--- a/toolchain/helpers.mk
++++ b/toolchain/helpers.mk
+@@ -136,9 +136,12 @@ copy_toolchain_sysroot = \
+ 		done ; \
+ 	fi ; \
+ 	if [ ! -e $(STAGING_DIR)/lib/ld*.so.* ]; then \
+-		if [ -e $${ARCH_SYSROOT_DIR}/lib/ld*.so.* ]; then \
+-			cp -a $${ARCH_SYSROOT_DIR}/lib/ld*.so.* $(STAGING_DIR)/lib/ ; \
+-		fi ; \
++		for linker in $${ARCH_SYSROOT_DIR}/lib/ld*.so.* ; do \
++			if [[ `readlink $${linker}` =~ "$${ARCH_LIB_DIR}" ]]; then \
++				cp -a $${linker} $(STAGING_DIR)/lib/ ; \
++				echo "Copying symlink to dynamic linker $${linker} to /lib of staging directory" ; \
++			fi ; \
++		done ; \
+ 	fi ; \
+ 	if [ `readlink -f $${SYSROOT_DIR}` != `readlink -f $${ARCH_SYSROOT_DIR}` ] ; then \
+ 		if [ ! -d $${ARCH_SYSROOT_DIR}/usr/include ] ; then \

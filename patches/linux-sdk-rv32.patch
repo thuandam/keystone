@@ -1,0 +1,428 @@
+diff --git a/examples/hello/eapp/Makefile b/examples/hello/eapp/Makefile
+index f5ddcfe..284c148 100644
+--- a/examples/hello/eapp/Makefile
++++ b/examples/hello/eapp/Makefile
+@@ -1,5 +1,5 @@
+ CC=/home/ubuntu/riscv-musl/install/bin/musl-gcc
+-#CC = riscv64-unknown-linux-gnu-gcc
++#CC = riscv32-unknown-linux-gnu-gcc
+ 
+ all:
+ 	$(CC) hello.c -o hello
+diff --git a/examples/hello/host/Makefile b/examples/hello/host/Makefile
+index fcc2c25..ea4e075 100644
+--- a/examples/hello/host/Makefile
++++ b/examples/hello/host/Makefile
+@@ -1,4 +1,4 @@
+-CC=riscv64-unknown-linux-gnu-g++
++CC=riscv32-unknown-linux-gnu-g++
+ 
+ all:
+ 	$(CC) -o runner \
+diff --git a/examples/hello/vault.sh b/examples/hello/vault.sh
+index 054d7f7..dbe5845 100755
+--- a/examples/hello/vault.sh
++++ b/examples/hello/vault.sh
+@@ -33,10 +33,10 @@ fi
+ 
+ # check if riscv tools are in PATH
+ if ! (
+-  $(command -v riscv64-unknown-elf-g++ > /dev/null) &&
+-  $(command -v riscv64-unknown-linux-gnu-g++ > /dev/null) &&
+-  $(command -v riscv64-unknown-elf-gcc > /dev/null) &&
+-  $(command -v riscv64-unknown-linux-gnu-gcc > /dev/null)
++  $(command -v riscv32-unknown-elf-g++ > /dev/null) &&
++  $(command -v riscv32-unknown-linux-gnu-g++ > /dev/null) &&
++  $(command -v riscv32-unknown-elf-gcc > /dev/null) &&
++  $(command -v riscv32-unknown-linux-gnu-gcc > /dev/null)
+   ); then
+   echo "riscv tools are not in PATH"
+   exit 1
+diff --git a/examples/tests/Makefile b/examples/tests/Makefile
+index ac12cd9..ac10a13 100644
+--- a/examples/tests/Makefile
++++ b/examples/tests/Makefile
+@@ -1,5 +1,5 @@
+-CC = riscv64-unknown-linux-gnu-g++
+-OBJCOPY = riscv64-unknown-linux-gnu-objcopy
++CC = riscv32-unknown-linux-gnu-g++
++OBJCOPY = riscv32-unknown-linux-gnu-objcopy
+ 
+ SDK_LIB_DIR =$(KEYSTONE_SDK_DIR)/lib
+ SDK_HOST_LIB = $(SDK_LIB_DIR)/libkeystone-host.a
+diff --git a/examples/tests/app.mk b/examples/tests/app.mk
+index dddf989..e9d2539 100644
+--- a/examples/tests/app.mk
++++ b/examples/tests/app.mk
+@@ -1,7 +1,7 @@
+-CC = riscv64-unknown-linux-gnu-gcc
++CC = riscv32-unknown-linux-gnu-gcc
+ CFLAGS = -Wall -Werror
+-LINK = riscv64-unknown-linux-gnu-ld
+-AS = riscv64-unknown-linux-gnu-as
++LINK = riscv32-unknown-linux-gnu-ld
++AS = riscv32-unknown-linux-gnu-as
+ 
+ SDK_LIB_DIR = $(KEYSTONE_SDK_DIR)/lib
+ SDK_APP_LIB = $(SDK_LIB_DIR)/libkeystone-eapp.a
+diff --git a/examples/tests/attestation/Makefile b/examples/tests/attestation/Makefile
+index 5635b37..b9f35cb 100644
+--- a/examples/tests/attestation/Makefile
++++ b/examples/tests/attestation/Makefile
+@@ -1,10 +1,10 @@
+ APP = attestation
+ APP_C_SRCS= attestation.c edge_wrapper.c
+ 
+-CC = riscv64-unknown-linux-gnu-gcc
++CC = riscv32-unknown-linux-gnu-gcc
+ CFLAGS = -Wall -Werror
+-LINK = riscv64-unknown-linux-gnu-ld
+-AS = riscv64-unknown-linux-gnu-as
++LINK = riscv32-unknown-linux-gnu-ld
++AS = riscv32-unknown-linux-gnu-as
+ 
+ SDK_LIB_DIR = $(KEYSTONE_SDK_DIR)/lib
+ SDK_APP_LIB = $(SDK_LIB_DIR)/libkeystone-eapp.a
+diff --git a/examples/tests/long-nop/add_long.s b/examples/tests/long-nop/add_long.s
+index a0800b6..8c3b47d 100644
+--- a/examples/tests/long-nop/add_long.s
++++ b/examples/tests/long-nop/add_long.s
+@@ -4100,7 +4100,7 @@ add:
+   addi x0, x0, 0
+   addi sp, sp, -64
+   li a0, 0xdeadbeef
+-  sd a0, (sp)
++  sw a0, (sp)
+ return:
+   li a0, 12345
+   li a7, 1101 
+diff --git a/examples/tests/long-nop/func_base.s b/examples/tests/long-nop/func_base.s
+index 00782b6..79f0ae9 100644
+--- a/examples/tests/long-nop/func_base.s
++++ b/examples/tests/long-nop/func_base.s
+@@ -1,6 +1,6 @@
+   addi sp, sp, -64
+   li a0, 0xdeadbeef
+-  sd a0, (sp)
++  sw a0, (sp)
+ return:
+   li a0, 12345
+   li a7, 1101 
+diff --git a/examples/tests/long-nop/func_long.s b/examples/tests/long-nop/func_long.s
+index 5645ba6..2edf017 100644
+--- a/examples/tests/long-nop/func_long.s
++++ b/examples/tests/long-nop/func_long.s
+@@ -4098,7 +4098,7 @@ add:
+   addi x0, x0, 0
+   addi sp, sp, -64
+   li a0, 0xdeadbeef
+-  sd a0, (sp)
++  sw a0, (sp)
+ return:
+   li a0, 12345
+   li a7, 1101 
+diff --git a/examples/tests/long-nop/long-nop.s b/examples/tests/long-nop/long-nop.s
+index a0800b6..8c3b47d 100644
+--- a/examples/tests/long-nop/long-nop.s
++++ b/examples/tests/long-nop/long-nop.s
+@@ -4100,7 +4100,7 @@ add:
+   addi x0, x0, 0
+   addi sp, sp, -64
+   li a0, 0xdeadbeef
+-  sd a0, (sp)
++  sw a0, (sp)
+ return:
+   li a0, 12345
+   li a7, 1101 
+diff --git a/examples/tests/stack/stack.s b/examples/tests/stack/stack.s
+index 08af8f2..54e356f 100644
+--- a/examples/tests/stack/stack.s
++++ b/examples/tests/stack/stack.s
+@@ -4,7 +4,7 @@ eapp_entry:
+ add:
+   addi sp, sp, -64
+   li a0, 0xdeadbeef
+-  sd a0, (sp)
++  sw a0, (sp)
+ return:
+   li a0, 12345
+   li a7, 1101 
+diff --git a/examples/tests/test-runner.cpp b/examples/tests/test-runner.cpp
+index 391f1fb..ea0f588 100644
+--- a/examples/tests/test-runner.cpp
++++ b/examples/tests/test-runner.cpp
+@@ -66,8 +66,13 @@ int main(int argc, char** argv)
+   int self_timing = 0;
+   int load_only = 0;
+ 
++#if __riscv_xlen == 64
+   size_t untrusted_size = 2*1024*1024;
+   size_t freemem_size = 48*1024*1024;
++#else
++  size_t untrusted_size = 512*1024;
++  size_t freemem_size = 1024*1024;
++#endif
+   uintptr_t utm_ptr = (uintptr_t)DEFAULT_UNTRUSTED_PTR;
+ 
+   static struct option long_options[] =
+diff --git a/examples/tests/untrusted/Makefile b/examples/tests/untrusted/Makefile
+index 918f7d6..e88cecb 100644
+--- a/examples/tests/untrusted/Makefile
++++ b/examples/tests/untrusted/Makefile
+@@ -1,10 +1,10 @@
+ APP = untrusted
+ APP_C_SRCS= untrusted.c edge_wrapper.c
+ 
+-CC = riscv64-unknown-linux-gnu-gcc
++CC = riscv32-unknown-linux-gnu-gcc
+ CFLAGS = -Wall -Werror
+-LINK = riscv64-unknown-linux-gnu-ld
+-AS = riscv64-unknown-linux-gnu-as
++LINK = riscv32-unknown-linux-gnu-ld
++AS = riscv32-unknown-linux-gnu-as
+ 
+ SDK_LIB_DIR = $(KEYSTONE_SDK_DIR)/lib
+ SDK_APP_LIB = $(SDK_LIB_DIR)/libkeystone-eapp.a
+diff --git a/examples/tests/vault.sh b/examples/tests/vault.sh
+index 1272b07..b44ad7d 100755
+--- a/examples/tests/vault.sh
++++ b/examples/tests/vault.sh
+@@ -40,10 +40,10 @@ fi
+ 
+ # check if riscv tools are in PATH
+ if ! (
+-  $(command -v riscv64-unknown-elf-g++ > /dev/null) &&
+-  $(command -v riscv64-unknown-linux-gnu-g++ > /dev/null) &&
+-  $(command -v riscv64-unknown-elf-gcc > /dev/null) &&
+-  $(command -v riscv64-unknown-linux-gnu-gcc > /dev/null)
++  $(command -v riscv32-unknown-elf-g++ > /dev/null) &&
++  $(command -v riscv32-unknown-linux-gnu-g++ > /dev/null) &&
++  $(command -v riscv32-unknown-elf-gcc > /dev/null) &&
++  $(command -v riscv32-unknown-linux-gnu-gcc > /dev/null)
+   ); then
+   echo "riscv tools are not in PATH"
+   exit 1
+diff --git a/lib/app/Makefile b/lib/app/Makefile
+index 0f6ca6d..e598794 100644
+--- a/lib/app/Makefile
++++ b/lib/app/Makefile
+@@ -1,8 +1,8 @@
+-CC = riscv64-unknown-linux-gnu-gcc
+-LINK = riscv64-unknown-linux-gnu-ld
++CC = riscv32-unknown-linux-gnu-gcc
++LINK = riscv32-unknown-linux-gnu-ld
+ LINKFLAGS = -static
+ INCLUDE_DIR = include
+-AR = riscv64-unknown-elf-ar
++AR = riscv32-unknown-elf-ar
+ ARFLAGS = rcs
+ 
+ OPTIONS_FLAGS ?=
+diff --git a/lib/edge/Makefile b/lib/edge/Makefile
+index b9b7c25..dbb5545 100644
+--- a/lib/edge/Makefile
++++ b/lib/edge/Makefile
+@@ -1,4 +1,4 @@
+-CC = riscv64-unknown-linux-gnu-gcc
++CC = riscv32-unknown-linux-gnu-gcc
+ INCLUDE_DIR = include/
+ SRC_DIR = src
+ 
+@@ -9,7 +9,7 @@ CCFLAGS = -Wall -Werror -I$(INCLUDE_DIR) $(OPTIONS_FLAGS)
+ SRCS = src/edge_call.c src/edge_dispatch.c src/edge_syscall.c
+ OBJS = $(patsubst %.c,%.o,$(SRCS))
+ 
+-AR = riscv64-unknown-elf-ar
++AR = riscv32-unknown-elf-ar
+ ARFLAGS = rcs
+ 
+ TARGET=../libkeystone-edge.a
+diff --git a/lib/edge/src/edge_syscall.c b/lib/edge/src/edge_syscall.c
+index cd40bb9..55daed9 100644
+--- a/lib/edge/src/edge_syscall.c
++++ b/lib/edge/src/edge_syscall.c
+@@ -17,7 +17,7 @@ void incoming_syscall(struct edge_call* edge_call){
+ 
+   edge_call->return_data.call_status = CALL_STATUS_OK;
+ 
+-  int64_t ret;
++  long ret;
+ 
+   // Right now we only handle some io syscalls. See runtime for how
+   // others are handled.
+@@ -73,8 +73,8 @@ void incoming_syscall(struct edge_call* edge_call){
+ 
+   /* Setup return value */
+   void* ret_data_ptr = (void*)edge_call_data_ptr();
+-  *(int64_t*)ret_data_ptr = ret;
+-  if(edge_call_setup_ret(edge_call, ret_data_ptr , sizeof(int64_t)) !=0) goto syscall_error;
++  *(long*)ret_data_ptr = ret;
++  if(edge_call_setup_ret(edge_call, ret_data_ptr , sizeof(long)) !=0) goto syscall_error;
+ 
+   return;
+ 
+diff --git a/lib/host/Makefile b/lib/host/Makefile
+index 0453c85..099915c 100644
+--- a/lib/host/Makefile
++++ b/lib/host/Makefile
+@@ -1,4 +1,4 @@
+-CC = riscv64-unknown-linux-gnu-g++
++CC = riscv32-unknown-linux-gnu-g++
+ INCLUDE_DIR = include/
+ SRC_DIR = src
+ 
+@@ -7,7 +7,7 @@ OPTIONS_FLAGS ?=
+ CCFLAGS = -Wall -Werror -I $(INCLUDE_DIR) $(OPTIONS_FLAGS)
+ SRCS = keystone.cpp elffile.cpp elf.cpp elf32.cpp elf64.cpp
+ OBJS = $(patsubst %.cpp,%.o,$(SRCS))
+-AR = riscv64-unknown-linux-gnu-ar
++AR = riscv32-unknown-linux-gnu-ar
+ ARFLAGS = rcs
+ 
+ TARGET=../libkeystone-host.a
+diff --git a/lib/host/include/keystone_user.h b/lib/host/include/keystone_user.h
+index 7da2d90..827731d 100644
+--- a/lib/host/include/keystone_user.h
++++ b/lib/host/include/keystone_user.h
+@@ -38,45 +38,45 @@
+ 
+ 
+ struct runtime_params_t {
+-  __u64 runtime_entry;
+-  __u64 user_entry;
+-  __u64 untrusted_ptr;
+-  __u64 untrusted_size;
++  unsigned long runtime_entry;
++  unsigned long user_entry;
++  unsigned long untrusted_ptr;
++  unsigned long untrusted_size;
+ };
+ 
+ struct keystone_ioctl_create_enclave {
+-  __u64 eid;
++  unsigned long eid;
+ 
+   //Min pages required
+-  __u64 min_pages;
++  unsigned long min_pages;
+ 
+   // virtual addresses
+-  __u64 runtime_vaddr;
+-  __u64 user_vaddr;
++  unsigned long runtime_vaddr;
++  unsigned long user_vaddr;
+ 
+   // Runtime Parameters
+   struct runtime_params_t params;
+ };
+ 
+ struct keystone_ioctl_run_enclave {
+-  __u64 eid;
+-  __u64 entry;
+-  __u64 args_ptr;
+-  __u64 args_size;
+-  __u64 ret;
++  unsigned long eid;
++  unsigned long entry;
++  unsigned long args_ptr;
++  unsigned long args_size;
++  unsigned long ret;
+ };
+ 
+ struct addr_packed {
+-  __u64 va;
+-  __u64 copied;
+-  __u64 eid;
+-  __u64 mode;
++  unsigned long va;
++  unsigned long copied;
++  unsigned long eid;
++  unsigned long mode;
+ };
+ 
+ struct keystone_ioctl_alloc_vspace {
+-  __u64 eid;
+-  __u64 vaddr;
+-  __u64 size;
++  unsigned long eid;
++  unsigned long vaddr;
++  unsigned long size;
+ };
+ 
+ #endif
+diff --git a/lib/host/include/params.h b/lib/host/include/params.h
+index d994641..d0022ad 100644
+--- a/lib/host/include/params.h
++++ b/lib/host/include/params.h
+@@ -8,11 +8,22 @@
+ #include <cstdio>
+ 
+ #define DEFAULT_FREEMEM_SIZE    1024*1024 // 1 MB
+-#define DEFAULT_UNTRUSTED_PTR   0xffffffff80000000
+ #define DEFAULT_UNTRUSTED_SIZE  8192 // 8 KB
+-
+ #define DEFAULT_STACK_SIZE      1024*16 // 16k
+-#define DEFAULT_STACK_START  0x0000000040000000
++#if __riscv_xlen == 64
++#define DEFAULT_UNTRUSTED_PTR   0xffffffff80000000
++#define DEFAULT_STACK_START     0x0000000040000000
++#else
++#define DEFAULT_UNTRUSTED_PTR   0xff800000
++#define DEFAULT_STACK_START     0x40000000
++#endif
++
++#if __riscv_xlen == 64
++#define XLEN_T uint64_t
++#else
++#define XLEN_T uint32_t
++#endif
++
+ /* parameters for enclave creation */
+ class Params
+ {
+@@ -23,18 +34,20 @@ class Params
+       freemem_size = DEFAULT_FREEMEM_SIZE;
+     }
+ 
+-    void setEnclaveEntry(uint64_t) { printf("WARN: setEnclaveEntry() is deprecated.\n"); }
+-    void setUntrustedMem(uint64_t ptr, uint64_t size) { untrusted = ptr; untrusted_size = size; }
+-    void setFreeMemSize(uint64_t size) { freemem_size = size; }
+-    uint64_t getUntrustedMem() { return untrusted; }
+-    uint64_t getUntrustedSize() { return untrusted_size; }
+-    uint64_t getFreeMemSize() { return freemem_size; }
++    void setEnclaveEntry(XLEN_T) { printf("WARN: setEnclaveEntry() is deprecated.\n"); }
++    void setUntrustedMem(XLEN_T ptr, XLEN_T size) { untrusted = ptr; untrusted_size = size; }
++    void setFreeMemSize(XLEN_T size) { freemem_size = size; }
++    XLEN_T getUntrustedMem() { return untrusted; }
++    XLEN_T getUntrustedSize() { return untrusted_size; }
++    XLEN_T getFreeMemSize() { return freemem_size; }
+   private:
+-    uint64_t runtime_entry;
+-    uint64_t enclave_entry;
+-    uint64_t untrusted;
+-    uint64_t untrusted_size;
+-    uint64_t freemem_size;
++    XLEN_T runtime_entry;
++    XLEN_T enclave_entry;
++    XLEN_T untrusted;
++    XLEN_T untrusted_size;
++    XLEN_T freemem_size;
+ };
+ 
++#undef XLEN_T
++
+ #endif
+diff --git a/lib/verifier/Makefile b/lib/verifier/Makefile
+index 9fb84f7..2c21b95 100644
+--- a/lib/verifier/Makefile
++++ b/lib/verifier/Makefile
+@@ -1,6 +1,6 @@
+-CXX = riscv64-unknown-linux-gnu-g++
+-CC	= riscv64-unknown-liunux-gnu-gcc
+-AR = riscv64-unknown-linux-gnu-ar
++CXX = riscv32-unknown-linux-gnu-g++
++CC	= riscv32-unknown-liunux-gnu-gcc
++AR = riscv32-unknown-linux-gnu-ar
+ #CXX = g++
+ #CC = gcc
+ #AR = ar

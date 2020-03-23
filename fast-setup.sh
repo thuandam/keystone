@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "Starting..."
-if ( $(command -v riscv64-unknown-linux-gnu-gcc > /dev/null) &&
-  $(command -v riscv64-unknown-elf-gcc > /dev/null) )
+if ( $(command -v riscv32-unknown-linux-gnu-gcc > /dev/null) &&
+  $(command -v riscv32-unknown-elf-gcc > /dev/null) )
 then
   echo "RISCV tools are already installed"
 else
@@ -27,11 +27,11 @@ else
   echo "Toolchain has been installed in $RISCV"
 fi
 
-git config --global submodule.riscv-gnu-toolchain.update none
-git submodule sync --recursive
+git config submodule.riscv-gnu-toolchain.update none
+#git submodule sync --recursive
 git submodule update --init --recursive
 
 # build tests in SDK
-make -C sdk
-./sdk/scripts/init.sh --runtime eyrie --force
-./sdk/examples/tests/vault.sh
+#make -C sdk
+#./sdk/scripts/init.sh --runtime eyrie --force
+#./sdk/examples/tests/vault.sh

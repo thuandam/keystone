@@ -1,2 +1,2 @@
 set auto-load safe-path /
-set riscv use_compressed_breakpoints no
+set riscv use-compressed-breakpoints on
