@@ -13,6 +13,7 @@ cd ..
 # buildroot patch
 cd buildroot
 patch -p1 --forward <  ../patches/buildroot-multilib-toolchain.patch || true
+patch -p1 --forward <  ../patches/buildroot-check-kernel-headers.patch || true
 cd ..
 
 # linux driver patch

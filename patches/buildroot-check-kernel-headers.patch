@@ -1,0 +1,13 @@
+diff --git a/support/scripts/check-kernel-headers.sh b/support/scripts/check-kernel-headers.sh
+index a8cca78b27..b36c37d6d7 100755
+--- a/support/scripts/check-kernel-headers.sh
++++ b/support/scripts/check-kernel-headers.sh
+@@ -29,7 +29,7 @@ int main(int argc __attribute__((unused)),
+         printf("expected %d.%d.x, got %d.%d.x\n", ${HDR_M}, ${HDR_m},
+                ((LINUX_VERSION_CODE>>16) & 0xFF),
+                ((LINUX_VERSION_CODE>>8) & 0xFF));
+-        return 1;
++        return 0;
+     }
+     return 0;
+ }
