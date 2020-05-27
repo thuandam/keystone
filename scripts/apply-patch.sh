@@ -30,5 +30,6 @@ cd ..
 # riscv-pk patch
 cd riscv-pk
 patch -p1 --forward <  ../patches/riscv-pk-qemu-misa.patch || true
+patch -p1 --forward <  ../patches/riscv-pk-sv32-mmu-type.patch || true
 cd ..
 
