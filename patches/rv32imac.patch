@@ -1,0 +1,31 @@
+diff --git a/hifive-conf/buildroot_initramfs_config b/hifive-conf/buildroot_initramfs_config
+index 380e3d3..063fd6f 100644
+--- a/hifive-conf/buildroot_initramfs_config
++++ b/hifive-conf/buildroot_initramfs_config
+@@ -1,9 +1,9 @@
+ BR2_riscv=y
+ BR2_ARCH_IS_64=n
+-BR2_GCC_TARGET_ABI="ilp32d"
++BR2_GCC_TARGET_ABI="ilp32"
+ BR2_RISCV_32=y
+ BR2_RISCV_g=y
+-BR2_RISCV_ABI_ILP32D=y
++BR2_RISCV_ABI_ILP32D=n
+ BR2_JLEVEL=2
+ BR2_TOOLCHAIN_EXTERNAL=y
+ BR2_TOOLCHAIN_EXTERNAL_PATH="$(RISCV)"
+diff --git a/hifive.mk b/hifive.mk
+index cceca30..f2ac28a 100644
+--- a/hifive.mk
++++ b/hifive.mk
+@@ -2,8 +2,8 @@
+ # a toolchain install tree that was built via other means.
+ RISCV ?= $(CURDIR)/riscv
+ PATH := $(RISCV)/bin:$(PATH)
+-ISA ?= rv32imafdc
+-ABI ?= ilp32d
++ISA ?= rv32imac
++ABI ?= ilp32
+ 
+ srcdir := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+ srcdir := $(srcdir:/=)
