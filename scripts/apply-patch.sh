@@ -8,3 +8,7 @@ cd riscv-linux
 patch -p0 --forward <  ../patches/linux-cma.patch || true
 cd ..
 
+# buildroot patch
+cd buildroot
+patch -p1 --forward <  ../patches/buildroot-check-kernel-headers.patch || true
+cd ..
