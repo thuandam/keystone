@@ -12,3 +12,9 @@ cd ..
 cd buildroot
 patch -p1 --forward <  ../patches/buildroot-check-kernel-headers.patch || true
 cd ..
+
+# riscv-pk patch
+cd riscv-pk
+patch -p1 --forward <  ../patches/riscv-pk-qemu-misa.patch || true
+cd ..
+
