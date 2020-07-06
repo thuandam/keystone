@@ -1,3 +1,10 @@
+diff --git a/rts/eyrie.version b/rts/eyrie.version
+index ac4ddd0..ffa253c 100644
+--- a/rts/eyrie.version
++++ b/rts/eyrie.version
+@@ -1 +1 @@
+-a8be826
++d566dd85
 diff --git a/scripts/init.sh b/scripts/init.sh
 index 9c434e5..423ef19 100755
 --- a/scripts/init.sh
