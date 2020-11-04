@@ -155,9 +155,11 @@ add_custom_command(DEPENDS ${buildroot_config} OUTPUT ${buildroot_wrkdir}/.confi
 ###############################################################################
 
 add_custom_command(OUTPUT ${bootrom_wrkdir} COMMAND mkdir -p ${bootrom_wrkdir})
-add_custom_target("bootrom" ALL
-  COMMAND $(MAKE) -C ${bootrom_srcdir} O=${bootrom_wrkdir}
-  DEPENDS ${bootrom_wrkdir} ${bootrom_srcdir}
+add_custom_target("bootrom-sync" DEPENDS ${bootrom_srcdir} ${bootrom_wrkdir}
+  COMMAND rsync -r ${bootrom_srcdir}/ ${bootrom_wrkdir})
+add_custom_target("bootrom" ALL DEPENDS ${bootrom_wrkdir} ${bootrom_srcdir} "bootrom-sync"
+  COMMAND $(MAKE) -C ${bootrom_wrkdir} O=${bootrom_wrkdir} march=${ISA} mabi=${ABI} CC=riscv${BITS}-unknown-elf-gcc
+    OBJCOPY=riscv${BITS}-unknown-elf-objcopy
   COMMENT "Building bootrom"
 )
 
@@ -181,7 +183,6 @@ else()
   add_patch("linux" "linux${BITS}.patch" ${linux_srcdir} linux_patches)
 endif()
 
-
 if(initramfs)
   # linux-initramfs
   execute_process(COMMAND id -u OUTPUT_VARIABLE uid)
@@ -189,11 +190,9 @@ if(initramfs)
   execute_process(COMMAND id -g OUTPUT_VARIABLE gid)
   string(STRIP ${gid} gid)
   add_custom_command(OUTPUT ${initramfs_sysroot} COMMAND mkdir -p ${initramfs_sysroot})
-  add_custom_target("sysroot" DEPENDS "buildroot" ${initramfs_sysroot} ${overlay_dir}
+  add_custom_command(OUTPUT ${linux_vmlinux_stripped} ${linux_vmlinux} DEPENDS ${initramfs_sysroot} ${linux_srcdir} "linux-symvers" "buildroot" ${buildroot_wrkdir}/images/rootfs.tar
     COMMAND tar -xpf ${buildroot_wrkdir}/images/rootfs.tar -C ${initramfs_sysroot} --exclude ./dev --exclude ./usr/share/locale
     COMMAND echo "::sysinit:/bin/mount -t devtmpfs devtmpfs /dev" >> ${initramfs_sysroot}/etc/inittab
-    )
-  add_custom_command(OUTPUT ${linux_vmlinux_stripped} ${linux_vmlinux} DEPENDS "sysroot" ${linux_srcdir} "linux-symvers"
     COMMAND $(MAKE) -C ${linux_srcdir}
       O=${linux_wrkdir} CONFIG_INITRAMFS_SOURCE="${confdir}/initramfs.txt ${initramfs_sysroot}"
       CONFIG_INITRAMFS_ROOT_UID=${uid} CONFIG_INITRAMFS_ROOT_GID=${gid}
@@ -281,7 +280,7 @@ add_custom_target("tests" DEPENDS examples ${overlay_root}
 ## COMPONENT: image
 ###############################################################################
 
-add_custom_target("image-deps" DEPENDS "tests" "driver"
+add_custom_target("image-deps" DEPENDS "tests" "driver" ${overlay_root}
   COMMAND find ${driver_wrkdir} -name "*.ko" -exec cp {} ${overlay_root} \\\\;
 )
 add_custom_target("image" DEPENDS "buildroot" "sm"
@@ -290,6 +289,10 @@ add_custom_target("image" DEPENDS "buildroot" "sm"
 )
 add_dependencies("buildroot" "image-deps")
 
+###############################################################################
+## PATCH
+###############################################################################
+add_custom_target("patch" DEPENDS ${qemu_patches} ${linux_patches} ${sm_patches})
 
 ###############################################################################
 ## QEMU scripts
